@@ -1,0 +1,142 @@
+.timetracking-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+
+  .timetracking-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 1440px;
+    height: 888px;
+
+    .date-buttons-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: #9fc9eb1c;
+      width: 865px;
+      gap: 150px;
+
+      .date-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 30px;
+
+        .date-label {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          label {
+            font-family: "Arial", sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 32px;
+            line-height: 37px;
+          }
+        }
+
+        .time-label {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          label {
+            font-family: "Inter", sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 75px;
+            line-height: 91px;
+          }
+        }
+      }
+
+      .button-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 391px;
+        gap: 35px;
+
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 640px;
+          height: 128px;
+          background: black;
+          color: white;
+          font-family: "Arial", sans-serif;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 40px;
+          line-height: 46px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .status-detail-content {
+      display: flex;
+      flex-direction: column;
+      background: grey;
+      width: 575px;
+      height: 888px;
+
+      .switch-status-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+
+        .switch-status-label {
+          display: flex;
+          justify-content: flex-start;
+          padding: 0 15px;
+          width: 100%;
+
+          p {
+            font-family: Poppins, sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 30px;
+            text-align: left;
+            color: #063831;
+          }
+        }
+
+        .switch-status-buttons {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+
+          .switch-button {
+            width: 229px;
+            height: 60px;
+            font-family: Poppins, sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 30px;
+            background: #aaaaaa;
+            color: #727171;
+
+            &.selected {
+              background: #9fc9eb;
+              color: black;
+              border: 1px solid black;
+            }
+          }
+        }
+      }
+    }
+  }
+}
