@@ -17,10 +17,10 @@ const FrontPage = () => {
   return (
     <div className="frontpage-main">
       <div className="frontpage-content">
-        <Link to="time-tracking" className="frontpage-button">
+        <Link to="working-time" className="frontpage-button">
           Työaikaleimaus
         </Link>
-        <Link to="manage-booking" className="frontpage-button">
+        <Link to="work-schedule" className="frontpage-button">
           Työvuorosuunnitelma
         </Link>
         <button className="frontpage-button" onClick={onLogout}>

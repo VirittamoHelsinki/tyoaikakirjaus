@@ -4,7 +4,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import Header from "./components/Header";
 import FrontPage from "./pages/FrontPage";
 import LoginPage from "./pages/LoginPage";
-import TimeTrackingPage from "./pages/TimeTrackingPage";
+import WorkingTimePage from "./pages/WorkingTimePage";
 import UserRoute from "./components/UserRoute";
 import GuestRoute from "./components/GuestRoute";
 
@@ -14,7 +14,14 @@ const App = () => {
       <AuthContextProvider>
         <Header />
         <Routes>
-          <Route path="/" element={<FrontPage />} />
+          <Route
+            path="/"
+            element={
+              <UserRoute>
+                <FrontPage />
+              </UserRoute>
+            }
+          />
           <Route
             path="login"
             element={
@@ -23,7 +30,14 @@ const App = () => {
               </GuestRoute>
             }
           />
-          <Route path="time-tracking" element={<TimeTrackingPage />} />
+          <Route
+            path="working-time"
+            element={
+              <UserRoute>
+                <WorkingTimePage />
+              </UserRoute>
+            }
+          />
         </Routes>
       </AuthContextProvider>
     </BrowserRouter>
