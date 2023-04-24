@@ -17,6 +17,8 @@ const TimeTrackingPage = () => {
   const [arrival, setArrival] = useState(null);
   const [departure, setDeparture] = useState(null);
   const [status, setStatus] = useState("lähityö");
+  const [showModal, setShowModal] = useState(false);
+  const [modalText, setModalText] = useState("");
 
   const { user } = UserAuth();
 
@@ -83,14 +85,28 @@ const TimeTrackingPage = () => {
             {arrival ? (
               <div className="time-button disabled">Sisään</div>
             ) : (
-              <div className="time-button" onClick={() => setArrival(new Date().valueOf().toString())}>
+              <div
+                className="time-button"
+                onClick={() => {
+                  setModalText("Olet kirjautunut sisään!");
+                  setArrival(new Date().valueOf().toString());
+                  setShowModal(true);
+                }}
+              >
                 Sisään
               </div>
             )}
             {departure ? (
               <div className="time-button disabled">Ulos</div>
             ) : (
-              <div className="time-button" onClick={() => setDeparture(new Date().valueOf().toString())}>
+              <div
+                className="time-button"
+                onClick={() => {
+                  setModalText("Olet kirjautunut ulos!");
+                  setDeparture(new Date().valueOf().toString());
+                  setShowModal(true);
+                }}
+              >
                 Ulos
               </div>
             )}
@@ -129,6 +145,31 @@ const TimeTrackingPage = () => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <div className="modal transparent-background">
+          <div className="modal">
+            <div className="modal-container">
+              <div className="modal-text-content">
+                <div className="text-label">
+                  <label>{modalText}</label>
+                </div>
+                <div className="description-label">
+                  <label>Kirjautumisen aika {getTime(new Date(parseInt(arrival)))}</label>
+                </div>
+              </div>
+              <button
+                className="modal-button"
+                onClick={() => {
+                  setModalText("");
+                  setShowModal(false);
+                }}
+              >
+                Sulje
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
