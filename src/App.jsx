@@ -5,8 +5,10 @@ import Header from "./components/Header";
 import FrontPage from "./pages/FrontPage";
 import LoginPage from "./pages/LoginPage";
 import WorkingTimePage from "./pages/WorkingTimePage";
-import UserRoute from "./components/UserRoute";
-import GuestRoute from "./components/GuestRoute";
+import EmployeesPage from "./pages/EmployeesPage";
+import UserRoute from "./routes/UserRoute";
+import GuestRoute from "./routes/GuestRoute";
+import AdminRoute from "./routes/AdminRoute";
 
 const App = () => {
   return (
@@ -36,6 +38,14 @@ const App = () => {
               <UserRoute>
                 <WorkingTimePage />
               </UserRoute>
+            }
+          />
+          <Route
+            path="employees"
+            element={
+              <AdminRoute>
+                <EmployeesPage />
+              </AdminRoute>
             }
           />
         </Routes>

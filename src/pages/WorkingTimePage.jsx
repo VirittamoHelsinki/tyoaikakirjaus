@@ -1,22 +1,30 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase/firebase";
 import "../styles/WorkingTimePage.scss";
 
-const getTime = (time = new Date()) => {
+const getHHMMSS = (time = new Date()) => {
   const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
   const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
   const seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
   return hours + ":" + minutes + ":" + seconds;
 };
 
+const getHHMM = (time) => {
+  const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
+  const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+  return hours + ":" + minutes;
+};
+
+const days = ["su", "ma", "ti", "ke", "to", "pe", "la"];
+
 const TimeTrackingPage = () => {
-  const [time, setTime] = useState(getTime());
+  const [time, setTime] = useState(getHHMMSS());
   const [arrival, setArrival] = useState(null);
   const [departure, setDeparture] = useState(null);
-  const [status, setStatus] = useState("lähityö");
+  const [workTimes, setWorkTimes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalText, setModalText] = useState("");
 
@@ -26,7 +34,7 @@ const TimeTrackingPage = () => {
   const date = new Date().getFullYear().toString() + "-" + new Date().getMonth().toString() + "-" + new Date().getDate().toString();
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(getTime()), 1000);
+    const interval = setInterval(() => setTime(getHHMMSS()), 1000);
     return () => {
       clearInterval(interval);
     };
@@ -35,7 +43,6 @@ const TimeTrackingPage = () => {
   const setWorkTime = async () => {
     try {
       await setDoc(doc(db, "users", user.uid, "working-time", date), {
-        status: status,
         arrival: arrival,
         departure: departure,
       });
@@ -49,10 +56,18 @@ const TimeTrackingPage = () => {
       if (!user.uid) return;
       const docSnap = await getDoc(doc(db, "users", user.uid, "working-time", date));
       if (docSnap.exists()) {
-        setStatus(docSnap.data().status);
         setArrival(docSnap.data().arrival);
         setDeparture(docSnap.data().departure);
       }
+      const times = [];
+      const collectionSnap = await getDocs(collection(db, "users", user.uid, "working-time"));
+      collectionSnap.forEach((doc) => {
+        times.push({
+          arrival: doc.data().arrival,
+          departure: doc.data().departure,
+        });
+      });
+      setWorkTimes(times);
     } catch (error) {
       window.alert("Ongelmia datan haussa:\n\n" + error);
     }
@@ -63,7 +78,7 @@ const TimeTrackingPage = () => {
       return;
     }
     setWorkTime();
-  }, [status, arrival, departure]);
+  }, [arrival, departure]);
 
   useEffect(() => {
     fetchWorkTime();
@@ -113,28 +128,33 @@ const TimeTrackingPage = () => {
           </div>
         </div>
         <div className="right-side-main">
-          <div className="status-times-content">
-            <div className="switch-status-content">
-              <div className="switch-status-label">
-                <p>Status</p>
+          <div className="times-content">
+            <div className="past-times-content">
+              <div className="past-times-label">
+                <p>Aiemmat työaikakirjaukset</p>
               </div>
-              <div className="switch-status-buttons">
-                <button className={`switch-button ${status === "lähityö" && "selected"}`} onClick={() => setStatus("lähityö")}>
-                  Lähityö
-                </button>
-                <button className={`switch-button ${status === "etätyö" && "selected"}`} onClick={() => setStatus("etätyö")}>
-                  Etätyö
-                </button>
+              <div className="past-times-data">
+                {workTimes.map((data, index) => (
+                  <div className="data-row" key={index}>
+                    <label>{days[new Date(parseInt(data.arrival)).getDay()]}</label>
+                    <label>
+                      {new Date(parseInt(data.arrival)).getDate()}.{new Date(parseInt(data.arrival)).getMonth() + 1}
+                    </label>
+                    <label>{getHHMM(new Date(parseInt(data.arrival)))}</label>
+                    <label>-</label>
+                    <label>{getHHMM(new Date(parseInt(data.departure)))}</label>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="working-time-content">
               <div className="label-stamp-box-content">
                 <label className="title-label">Sisään:</label>
-                <label className="stamp-box-label">{arrival && getTime(new Date(parseInt(arrival)))}</label>
+                <label className="stamp-box-label">{arrival && getHHMMSS(new Date(parseInt(arrival)))}</label>
               </div>
               <div className="label-stamp-box-content">
                 <label className="title-label">Ulos:</label>
-                <label className="stamp-box-label">{departure && getTime(new Date(parseInt(departure)))}</label>
+                <label className="stamp-box-label">{departure && getHHMMSS(new Date(parseInt(departure)))}</label>
               </div>
             </div>
           </div>
@@ -154,7 +174,7 @@ const TimeTrackingPage = () => {
                   <label>{modalText}</label>
                 </div>
                 <div className="description-label">
-                  <label>Kirjautumisen aika {getTime(new Date(parseInt(arrival)))}</label>
+                  <label>Kirjautumisen aika {getHHMMSS(new Date(parseInt(arrival)))}</label>
                 </div>
               </div>
               <button

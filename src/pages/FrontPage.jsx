@@ -4,7 +4,7 @@ import { UserAuth } from "../context/AuthContext";
 import "../styles/FrontPage.scss";
 
 const FrontPage = () => {
-  const { logout } = UserAuth();
+  const { logout, admin } = UserAuth();
 
   const onLogout = async () => {
     try {
@@ -23,6 +23,11 @@ const FrontPage = () => {
         <Link to="work-schedule" className="frontpage-button">
           Työvuorosuunnitelma
         </Link>
+        {admin && (
+          <Link to="employees" className="frontpage-button">
+            Työntekijät
+          </Link>
+        )}
         <button className="frontpage-button" onClick={onLogout}>
           Kirjaudu ulos
         </button>

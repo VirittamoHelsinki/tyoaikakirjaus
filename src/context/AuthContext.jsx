@@ -6,6 +6,7 @@ const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [admin, setAdmin] = useState(false);
 
   const createUser = async (email, password) => {
     try {
@@ -31,11 +32,15 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = () => {
+    setAdmin(false);
     return signOut(auth);
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser?.email.includes("mikko")) {
+        setAdmin(true);
+      }
       setUser(currentUser);
     });
     return () => {
@@ -43,7 +48,7 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
-  return <UserContext.Provider value={{ createUser, user, logout, signIn }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ createUser, user, admin, logout, signIn }}>{children}</UserContext.Provider>;
 };
 
 export const UserAuth = () => {
