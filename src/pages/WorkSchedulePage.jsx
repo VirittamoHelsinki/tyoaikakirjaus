@@ -26,8 +26,8 @@ const WorkSchedulePage = () => {
   const state_exists = location.state !== null;
 
   const fetchMonthData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       let _days = [];
       let date = new Date(currentYear, currentMonth, 1);
       while (date.getMonth() === currentMonth) {
