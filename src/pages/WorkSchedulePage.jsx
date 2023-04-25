@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-import { Spinner } from "../components/Spinner";
+import Spinner  from "../components/Spinner";
 import "../styles/WorkSchedulePage.scss";
 
 const weekdays = ["SU", "MA", "TI", "KE", "TO", "PE", "LA"];
+
+const months = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"]
 
 const getHHMM = (time) => {
   const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
@@ -17,7 +19,6 @@ const WorkSchedulePage = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [days, setDays] = useState([]);
-  const [stamps, setStamps] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
@@ -27,7 +28,7 @@ const WorkSchedulePage = () => {
   const fetchMonthData = async () => {
     setLoading(true);
     try {
-      let _stamps = [];
+      let _days = [];
       let date = new Date(currentYear, currentMonth, 1);
       while (date.getMonth() === currentMonth) {
         let arrival = null;
@@ -38,11 +39,17 @@ const WorkSchedulePage = () => {
           arrival = docSnap.data().arrival;
           departure = docSnap.data().departure;
         }
-        _stamps.push({ arrival: arrival, departure: departure });
+        _days.push({ 
+          day: date.getDay(),
+          date: date.getDate() < 10 ? "0" + date.getDate() : date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+          arrival: arrival, 
+          departure: departure 
+        });
         date.setDate(date.getDate() + 1);
       }
-      console.log(_stamps);
-      setStamps(_stamps);
+      setDays(_days);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -54,44 +61,60 @@ const WorkSchedulePage = () => {
     fetchMonthData();
   }, [currentMonth]);
 
-  useEffect(() => {
-    if (stamps.length > 0) {
-      let _days = [];
-      let date = new Date(currentYear, currentMonth, 1);
-      while (date.getMonth() === currentMonth) {
-        _days.push({
-          day: date.getDay(),
-          date: date.getDate() < 10 ? "0" + date.getDate() : date.getDate(),
-          month: date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth(),
-          year: date.getFullYear(),
-          arrival: stamps[date.getDate() - 1].arrival,
-          departure: stamps[date.getDate() - 1].departure,
-        });
-        date.setDate(date.getDate() + 1);
-      }
-      console.log(_days);
-      setDays(_days);
+  const prevMonth = () => {
+    if (currentMonth > 0) {
+      setCurrentMonth(currentMonth - 1);
+    } else {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
     }
-  }, [stamps]);
+  }
+
+  const nextMonth = () => {
+    if (currentMonth < 11) {
+      setCurrentMonth(currentMonth + 1);
+    } else {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    }
+  }
 
   return (
     <div className="schedule-main">
       <div className="schedule-content">
-        <div className="employee-name-title">
-          <label>Etunimi Sukunimi</label>
+        <div className="employee-name-month-buttons">
+          <div className="employee-name-title">
+            <label>{location.state.name}</label>
+          </div>
+          <div className="month-buttons-row">
+            <label className="arrow-button" onClick={prevMonth}>&lt;</label>
+            <label className="month-label">{months[currentMonth]}</label>
+            <label className="arrow-button" onClick={nextMonth}>&gt;</label>
+          </div>
         </div>
         {loading ? (
           <Spinner />
         ) : (
           <div className="schedule-list">
+            <div className="schedule-data title" key={"title"}>
+              <div className="date-content">
+                <label className="weekday-label">PÄIVÄMÄÄRÄ</label>
+              </div>
+              <label className="time-label">SISÄÄN</label>
+              <label className="time-label">ULOS</label>
+            </div>
             {days.map((day, index) => (
               <div className={`schedule-data ${index % 2 === 0 && "even"}`} key={index}>
-                <label className="weekday-label">{weekdays[day.day]}</label>
-                <label>
-                  {day.date}.{parseInt(day.month) + 1}.{day.year}
-                </label>
-                {day.arrival && <label>{getHHMM(new Date(parseInt(day.arrival)))}</label>}
-                {day.departure && <label>{getHHMM(new Date(parseInt(day.departure)))}</label>}
+                <div className="date-content">
+                  <label className="weekday-label">{weekdays[day.day]}</label>
+                  <label>
+                    {day.date}.
+                    {parseInt(day.month) + 1 < 10 ? "0" + (parseInt(day.month) + 1) : (parseInt(day.month) + 1)}.
+                    {day.year}
+                  </label>
+                </div>
+                {day.arrival && <label className="time-label">{getHHMM(new Date(parseInt(day.arrival)))}</label>}
+                {day.departure && <label className="time-label">{getHHMM(new Date(parseInt(day.departure)))}</label>}
               </div>
             ))}
           </div>

@@ -14,17 +14,48 @@
     padding: 40px 40px 0;
     gap: 40px;
 
-    .employee-name-title {
+    .employee-name-month-buttons {
       display: flex;
-      justify-content: flex-start;
+      flex-direction: row;
+      justify-content: space-between;
 
-      label {
-        font-family: "Arial", sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 32px;
-        line-height: 24px;
-        text-align: left;
+      .employee-name-title {
+        display: flex;
+        justify-content: flex-start;
+  
+        label {
+          font-family: "Arial", sans-serif;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 32px;
+          line-height: 24px;
+          text-align: left;
+        }
+      }
+
+      .month-buttons-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 200px;
+
+        .arrow-button {
+          font-weight: 800;
+          font-size: 32px;
+          line-height: 32px;
+          cursor: pointer;
+        }
+
+        .month-label {
+          font-family: "Arial", sans-serif;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 24px;
+          line-height: 24px;
+          color: #9FC9EB;
+          text-align: center;
+        }
       }
     }
 
@@ -41,19 +72,45 @@
         width: 100%;
         align-items: center;
         padding: 5px 25px;
-        gap: 10px;
         font-family: "Arial", sans-serif;
         font-style: normal;
         font-weight: 400;
         font-size: 15px;
         line-height: 24px;
 
+        .date-content {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          width: 25%;
+          gap: 10px;
+
+          .weekday-label {
+            width: 40px;
+          }
+        }
+
+        .time-label {
+          display: flex;
+          justify-content: flex-start;
+          width: 17%;
+        }
+
         &.even {
           background: #dceaf5;
         }
 
-        .weekday-label {
-          width: 40px;
+        &.title {
+          display: flex;
+          align-items: center;
+          height: 51px;
+          background: #9FC9EB;
+          font-family: 'Arial', sans-serif;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 15px;
+          line-height: 24px;
+          border-bottom: 2px solid black;
         }
       }
     }
