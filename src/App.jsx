@@ -6,6 +6,7 @@ import FrontPage from "./pages/FrontPage";
 import LoginPage from "./pages/LoginPage";
 import WorkingTimePage from "./pages/WorkingTimePage";
 import EmployeesPage from "./pages/EmployeesPage";
+import WorkSchedulePage from "./pages/WorkSchedulePage";
 import UserRoute from "./routes/UserRoute";
 import GuestRoute from "./routes/GuestRoute";
 import AdminRoute from "./routes/AdminRoute";
@@ -45,6 +46,14 @@ const App = () => {
             element={
               <AdminRoute>
                 <EmployeesPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="work-schedule"
+            element={
+              <AdminRoute>
+                <WorkSchedulePage />
               </AdminRoute>
             }
           />

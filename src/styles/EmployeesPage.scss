@@ -1,0 +1,75 @@
+.employees-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+
+  .employees-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 1440px;
+    height: 888px;
+    padding: 40px 40px 0;
+    gap: 40px;
+
+    .employees-title {
+      display: flex;
+      justify-content: flex-start;
+
+      label {
+        font-family: "Arial", sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 32px;
+        line-height: 24px;
+        text-align: left;
+      }
+    }
+
+    .employees-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .employee-data {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        padding: 12px 25px;
+
+        &.even {
+          background: #dceaf5;
+        }
+
+        label {
+          font-family: "Arial", sans-serif;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 20px;
+          line-height: 24px;
+        }
+
+        .schedule-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: max-content;
+          height: 44px;
+          background: #10538a;
+          font-family: "Arial", sans-serif;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 15px;
+          line-height: 17px;
+          color: white;
+          padding: 0 20px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

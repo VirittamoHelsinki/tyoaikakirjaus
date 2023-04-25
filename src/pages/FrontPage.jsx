@@ -17,9 +17,11 @@ const FrontPage = () => {
   return (
     <div className="frontpage-main">
       <div className="frontpage-content">
-        <Link to="working-time" className="frontpage-button">
-          Työaikaleimaus
-        </Link>
+        {admin && (
+          <Link to="working-time" className="frontpage-button">
+            Työaikaleimaus
+          </Link>
+        )}
         <Link to="work-schedule" className="frontpage-button">
           Työvuorosuunnitelma
         </Link>

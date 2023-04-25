@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
-import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase/firebase";
+import { UserAuth } from "../context/AuthContext";
 import "../styles/WorkingTimePage.scss";
 
 const getHHMMSS = (time = new Date()) => {
@@ -18,7 +18,7 @@ const getHHMM = (time) => {
   return hours + ":" + minutes;
 };
 
-const days = ["su", "ma", "ti", "ke", "to", "pe", "la"];
+const weekdays = ["SU", "MA", "TI", "KE", "TO", "PE", "LA"];
 
 const TimeTrackingPage = () => {
   const [time, setTime] = useState(getHHMMSS());
@@ -129,20 +129,21 @@ const TimeTrackingPage = () => {
         </div>
         <div className="right-side-main">
           <div className="times-content">
-            <div className="past-times-content">
-              <div className="past-times-label">
+            <div className="previous-content">
+              <div className="previous-label">
                 <p>Aiemmat työaikakirjaukset</p>
               </div>
-              <div className="past-times-data">
-                {workTimes.map((data, index) => (
-                  <div className="data-row" key={index}>
-                    <label>{days[new Date(parseInt(data.arrival)).getDay()]}</label>
-                    <label>
-                      {new Date(parseInt(data.arrival)).getDate()}.{new Date(parseInt(data.arrival)).getMonth() + 1}
-                    </label>
+              <div className="previous-data">
+                {workTimes.slice(-5).map((data, index) => (
+                  <div className={`data-row ${index % 2 === 0 && "even"}`} key={index}>
+                    <div className="day-date-label">
+                      <label>{weekdays[new Date(parseInt(data.arrival)).getDay()]}</label>
+                      <label>
+                        {new Date(parseInt(data.arrival)).getDate()}.{new Date(parseInt(data.arrival)).getMonth() + 1}
+                      </label>
+                    </div>
                     <label>{getHHMM(new Date(parseInt(data.arrival)))}</label>
-                    <label>-</label>
-                    <label>{getHHMM(new Date(parseInt(data.departure)))}</label>
+                    {data.departure ? <label>{getHHMM(new Date(parseInt(data.departure)))}</label> : <label className="empty-label" />}
                   </div>
                 ))}
               </div>
