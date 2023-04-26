@@ -4,7 +4,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import Header from "./components/Header";
 import FrontPage from "./pages/FrontPage";
 import LoginPage from "./pages/LoginPage";
-import WorkingTimePage from "./pages/WorkingTimePage";
+import WorkHourPage from "./pages/WorkHourPage";
 import EmployeesPage from "./pages/EmployeesPage";
 import WorkSchedulePage from "./pages/WorkSchedulePage";
 import UserRoute from "./routes/UserRoute";
@@ -34,10 +34,10 @@ const App = () => {
             }
           />
           <Route
-            path="working-time"
+            path="work-hour"
             element={
               <UserRoute>
-                <WorkingTimePage />
+                <WorkHourPage />
               </UserRoute>
             }
           />

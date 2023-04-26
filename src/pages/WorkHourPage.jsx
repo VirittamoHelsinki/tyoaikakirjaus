@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { UserAuth } from "../context/AuthContext";
-import "../styles/WorkingTimePage.scss";
+import "../styles/WorkHourPage.scss";
 
 const getHHMMSS = (time = new Date()) => {
   const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
@@ -18,9 +18,16 @@ const getHHMM = (time) => {
   return hours + ":" + minutes;
 };
 
+const getDate = (date) => {
+  const year = date.getFullYear().toString();
+  const month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+  const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+  return year + "-" + month + "-" + day;
+};
+
 const weekdays = ["SU", "MA", "TI", "KE", "TO", "PE", "LA"];
 
-const TimeTrackingPage = () => {
+const WorkHourPage = () => {
   const [time, setTime] = useState(getHHMMSS());
   const [arrival, setArrival] = useState(null);
   const [departure, setDeparture] = useState(null);
@@ -29,9 +36,6 @@ const TimeTrackingPage = () => {
   const [modalText, setModalText] = useState("");
 
   const { user } = UserAuth();
-
-  /* get date format "yyyy-mm-dd" and use it as document name in db */
-  const date = new Date().getFullYear().toString() + "-" + new Date().getMonth().toString() + "-" + new Date().getDate().toString();
 
   useEffect(() => {
     const interval = setInterval(() => setTime(getHHMMSS()), 1000);
@@ -42,7 +46,7 @@ const TimeTrackingPage = () => {
 
   const setWorkTime = async () => {
     try {
-      await setDoc(doc(db, "users", user.uid, "working-time", date), {
+      await setDoc(doc(db, "users", user.uid, "working-time", getDate(new Date())), {
         arrival: arrival,
         departure: departure,
       });
@@ -54,7 +58,7 @@ const TimeTrackingPage = () => {
   const fetchWorkTime = async () => {
     try {
       if (!user.uid) return;
-      const docSnap = await getDoc(doc(db, "users", user.uid, "working-time", date));
+      const docSnap = await getDoc(doc(db, "users", user.uid, "working-time", getDate(new Date())));
       if (docSnap.exists()) {
         setArrival(docSnap.data().arrival);
         setDeparture(docSnap.data().departure);
@@ -85,8 +89,8 @@ const TimeTrackingPage = () => {
   }, []);
 
   return (
-    <div className="timetracking-main">
-      <div className="timetracking-content">
+    <div className="workhour-main">
+      <div className="workhour-content">
         <div className="date-buttons-content">
           <div className="date-column">
             <div className="date-label">
@@ -134,8 +138,15 @@ const TimeTrackingPage = () => {
                 <p>Aiemmat työaikakirjaukset</p>
               </div>
               <div className="previous-data">
+                <div className="data-row title" key="title">
+                  <div className="day-date-label">
+                    <label>PÄIVÄMÄÄRÄ</label>
+                  </div>
+                  <label>SISÄÄN</label>
+                  <label>ULOS</label>
+                </div>
                 {workTimes.slice(-5).map((data, index) => (
-                  <div className={`data-row ${index % 2 === 0 && "even"}`} key={index}>
+                  <div className={`data-row ${index % 2 === 1 && "odd"}`} key={index}>
                     <div className="day-date-label">
                       <label>{weekdays[new Date(parseInt(data.arrival)).getDay()]}</label>
                       <label>
@@ -195,4 +206,4 @@ const TimeTrackingPage = () => {
   );
 };
 
-export default TimeTrackingPage;
+export default WorkHourPage;

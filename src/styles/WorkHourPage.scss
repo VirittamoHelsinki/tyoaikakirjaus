@@ -1,11 +1,11 @@
-.timetracking-main {
+.workhour-main {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: fit-content;
 
-  .timetracking-content {
+  .workhour-content {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -145,8 +145,13 @@
               line-height: 24px;
               padding: 12px 25px;
 
-              &.even {
+              &.odd {
                 background: #dceaf5;
+              }
+
+              &.title {
+                background: #dceaf5;
+                font-weight: 700;
               }
 
               .day-date-label {

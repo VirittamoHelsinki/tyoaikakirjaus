@@ -2,17 +2,24 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-import Spinner  from "../components/Spinner";
+import Spinner from "../components/Spinner";
 import "../styles/WorkSchedulePage.scss";
 
 const weekdays = ["SU", "MA", "TI", "KE", "TO", "PE", "LA"];
 
-const months = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"]
+const months = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"];
 
 const getHHMM = (time) => {
   const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
   const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
   return hours + ":" + minutes;
+};
+
+const getDate = (date) => {
+  const year = date.getFullYear().toString();
+  const month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+  const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+  return year + "-" + month + "-" + day;
 };
 
 const WorkSchedulePage = () => {
@@ -23,8 +30,6 @@ const WorkSchedulePage = () => {
 
   const location = useLocation();
 
-  const state_exists = location.state !== null;
-
   const fetchMonthData = async () => {
     try {
       setLoading(true);
@@ -33,19 +38,18 @@ const WorkSchedulePage = () => {
       while (date.getMonth() === currentMonth) {
         let arrival = null;
         let departure = null;
-        const _date = date.getFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDate().toString();
-        const docSnap = await getDoc(doc(db, "users", location.state.uid, "working-time", _date));
+        const docSnap = await getDoc(doc(db, "users", location.state.uid, "working-time", getDate(date)));
         if (docSnap.exists()) {
           arrival = docSnap.data().arrival;
           departure = docSnap.data().departure;
         }
-        _days.push({ 
+        _days.push({
           day: date.getDay(),
           date: date.getDate() < 10 ? "0" + date.getDate() : date.getDate(),
           month: date.getMonth(),
           year: date.getFullYear(),
-          arrival: arrival, 
-          departure: departure 
+          arrival: arrival,
+          departure: departure,
         });
         date.setDate(date.getDate() + 1);
       }
@@ -68,7 +72,7 @@ const WorkSchedulePage = () => {
       setCurrentMonth(11);
       setCurrentYear(currentYear - 1);
     }
-  }
+  };
 
   const nextMonth = () => {
     if (currentMonth < 11) {
@@ -77,7 +81,7 @@ const WorkSchedulePage = () => {
       setCurrentMonth(0);
       setCurrentYear(currentYear + 1);
     }
-  }
+  };
 
   return (
     <div className="schedule-main">
@@ -87,9 +91,13 @@ const WorkSchedulePage = () => {
             <label>{location.state.name}</label>
           </div>
           <div className="month-buttons-row">
-            <label className="arrow-button" onClick={prevMonth}>&lt;</label>
+            <label className="arrow-button" onClick={prevMonth}>
+              &lt;
+            </label>
             <label className="month-label">{months[currentMonth]}</label>
-            <label className="arrow-button" onClick={nextMonth}>&gt;</label>
+            <label className="arrow-button" onClick={nextMonth}>
+              &gt;
+            </label>
           </div>
         </div>
         {loading ? (
@@ -108,9 +116,7 @@ const WorkSchedulePage = () => {
                 <div className="date-content">
                   <label className="weekday-label">{weekdays[day.day]}</label>
                   <label>
-                    {day.date}.
-                    {parseInt(day.month) + 1 < 10 ? "0" + (parseInt(day.month) + 1) : (parseInt(day.month) + 1)}.
-                    {day.year}
+                    {day.date}.{parseInt(day.month) + 1 < 10 ? "0" + (parseInt(day.month) + 1) : parseInt(day.month) + 1}.{day.year}
                   </label>
                 </div>
                 {day.arrival && <label className="time-label">{getHHMM(new Date(parseInt(day.arrival)))}</label>}
