@@ -3,24 +3,9 @@ import { useLocation } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import Spinner from "../components/Spinner";
+import { getHHMM, getDate } from "../features/functions";
+import { weekdays, months } from "../features/arrays";
 import "../styles/WorkSchedulePage.scss";
-
-const weekdays = ["SU", "MA", "TI", "KE", "TO", "PE", "LA"];
-
-const months = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"];
-
-const getHHMM = (time) => {
-  const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
-  const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-  return hours + ":" + minutes;
-};
-
-const getDate = (date) => {
-  const year = date.getFullYear().toString();
-  const month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
-  const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-  return year + "-" + month + "-" + day;
-};
 
 const WorkSchedulePage = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());

@@ -3,29 +3,9 @@ import { Link } from "react-router-dom";
 import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { UserAuth } from "../context/AuthContext";
+import { getHHMMSS, getHHMM, getDate } from "../features/functions";
+import { weekdays } from "../features/arrays";
 import "../styles/WorkHourPage.scss";
-
-const getHHMMSS = (time = new Date()) => {
-  const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
-  const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-  const seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
-  return hours + ":" + minutes + ":" + seconds;
-};
-
-const getHHMM = (time) => {
-  const hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
-  const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-  return hours + ":" + minutes;
-};
-
-const getDate = (date) => {
-  const year = date.getFullYear().toString();
-  const month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
-  const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-  return year + "-" + month + "-" + day;
-};
-
-const weekdays = ["SU", "MA", "TI", "KE", "TO", "PE", "LA"];
 
 const WorkHourPage = () => {
   const [time, setTime] = useState(getHHMMSS());
@@ -34,6 +14,7 @@ const WorkHourPage = () => {
   const [workTimes, setWorkTimes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalText, setModalText] = useState("");
+  const [modalTime, setModalTime] = useState(new Date());
 
   const { user } = UserAuth();
 
@@ -108,6 +89,7 @@ const WorkHourPage = () => {
                 className="time-button"
                 onClick={() => {
                   setModalText("Olet kirjautunut sisään!");
+                  setModalTime(new Date());
                   setArrival(new Date().valueOf().toString());
                   setShowModal(true);
                 }}
@@ -122,6 +104,7 @@ const WorkHourPage = () => {
                 className="time-button"
                 onClick={() => {
                   setModalText("Olet kirjautunut ulos!");
+                  setModalTime(new Date());
                   setDeparture(new Date().valueOf().toString());
                   setShowModal(true);
                 }}
@@ -186,7 +169,7 @@ const WorkHourPage = () => {
                   <label>{modalText}</label>
                 </div>
                 <div className="description-label">
-                  <label>Kirjautumisen aika {getHHMMSS(new Date(parseInt(arrival)))}</label>
+                  <label>Kirjautumisen aika {getHHMMSS(modalTime)}</label>
                 </div>
               </div>
               <button
