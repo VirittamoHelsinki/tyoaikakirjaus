@@ -128,7 +128,7 @@ const WorkHourPage = () => {
                   <label>SISÄÄN</label>
                   <label>ULOS</label>
                 </div>
-                {workTimes.slice(-5).map((data, index) => (
+                {workTimes.slice(-6).map((data, index) => (
                   <div className={`data-row ${index % 2 === 1 && "odd"}`} key={index}>
                     <div className="day-date-label">
                       <label>{weekdays[new Date(parseInt(data.arrival)).getDay()]}</label>

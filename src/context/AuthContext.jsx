@@ -8,6 +8,8 @@ const UserContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [admin, setAdmin] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
   const createUser = async (email, password) => {
     try {
@@ -19,9 +21,11 @@ export const AuthContextProvider = ({ children }) => {
       }
       signOut(auth);
       await sendEmailVerification(userdata.user);
-      window.alert("Vahvistuspyyntö lähetetty antamaasi sähköpostiosoitteeseen");
+      setMessage("Vahvistuspyyntö lähetetty antamaasi sähköpostiosoitteeseen.");
+      setShowMessage(true);
     } catch (error) {
-      window.alert("Käyttäjätilin luominen ei onnistunut:\n\n" + error);
+      setMessage("Käyttäjätilin luominen ei onnistunut: " + error);
+      setShowMessage(true);
     }
   };
 
@@ -30,16 +34,23 @@ export const AuthContextProvider = ({ children }) => {
       const userdata = await signInWithEmailAndPassword(auth, email, password);
       if (!userdata.user.emailVerified) {
         signOut(auth);
-        window.alert("Ole hyvä ja käy vahvistamassa rekisteröityminen antamassasi sähköpostiosoitteessa");
+        setMessage("Ole hyvä ja käy vahvistamassa rekisteröityminen antamassasi sähköpostiosoitteessa");
+        setShowMessage(true);
       }
     } catch (error) {
-      window.alert("Kirjautuminen ei onnistunut antamallasi sähköpostilla ja salasanalla:\n\n" + error);
+      setMessage("Kirjautuminen ei onnistunut antamallasi sähköpostilla ja salasanalla: " + error);
+      setShowMessage(true);
     }
   };
 
   const logout = () => {
     setAdmin(false);
     return signOut(auth);
+  };
+
+  const closeMessage = () => {
+    setMessage("");
+    setShowMessage(false);
   };
 
   useEffect(() => {
@@ -54,7 +65,22 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
-  return <UserContext.Provider value={{ createUser, user, admin, logout, signIn }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider
+      value={{
+        createUser,
+        user,
+        admin,
+        logout,
+        signIn,
+        showMessage,
+        message,
+        closeMessage,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const UserAuth = () => {
