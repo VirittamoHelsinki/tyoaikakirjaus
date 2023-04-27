@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [register, setRegister] = useState(false);
 
-  const { createUser, signIn } = UserAuth();
+  const { createUser, signIn, showMessage, message, closeMessage } = UserAuth();
 
   const onSignup = (e) => {
     e.preventDefault();
@@ -93,6 +93,27 @@ const LoginPage = () => {
               >
                 Rekisteröidy nyt
               </label>
+            </div>
+          </div>
+        </div>
+      )}
+      {showMessage && (
+        <div className="login-modal transparent-background">
+          <div className="login-modal">
+            <div className="login-modal-container">
+              <div className="login-modal-text-content">
+                <div className="text-label">
+                  <label>{message}</label>
+                </div>
+              </div>
+              <button
+                className="login-modal-button"
+                onClick={() => {
+                  closeMessage();
+                }}
+              >
+                Sulje
+              </button>
             </div>
           </div>
         </div>
