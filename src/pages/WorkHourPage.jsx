@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { UserAuth } from "../context/AuthContext";
@@ -15,6 +15,8 @@ const WorkHourPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalText, setModalText] = useState("");
   const [modalTime, setModalTime] = useState(new Date());
+
+  const navigate = useNavigate();
 
   const { user } = UserAuth();
 
@@ -38,7 +40,6 @@ const WorkHourPage = () => {
 
   const fetchWorkTime = async () => {
     try {
-      if (!user.uid) return;
       const docSnap = await getDoc(doc(db, "users", user.uid, "working-time", getDate(new Date())));
       if (docSnap.exists()) {
         setArrival(docSnap.data().arrival);
@@ -66,6 +67,10 @@ const WorkHourPage = () => {
   }, [arrival, departure]);
 
   useEffect(() => {
+    if (!user.uid) {
+      navigate("/");
+      return;
+    };
     fetchWorkTime();
   }, []);
 
