@@ -16,9 +16,7 @@ const WorkHourPage = () => {
   const [modalText, setModalText] = useState("");
   const [modalTime, setModalTime] = useState(new Date());
 
-  const navigate = useNavigate();
-
-  const { user, logout } = UserAuth();
+  const { user } = UserAuth();
 
   const year = new Date().getFullYear();
   const month = new Date().getMonth();
@@ -76,14 +74,6 @@ const WorkHourPage = () => {
     }
     fetchWorkTime();
   }, [user]);
-
-  const onLogout = async () => {
-    try {
-      await logout();
-    } catch (e) {
-      window.alert("Ongelmia uloskirjautumisessa:\n\n" + error);
-    }
-  };
 
   const arrivalAllowed = () => {
     return (
