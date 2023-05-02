@@ -29,21 +29,19 @@ const EmployeesPage = () => {
   }, []);
 
   return (
-    <div className="employees-main">
-      <div className="employees-content">
-        <div className="employees-title">
-          <label>Työntekijät</label>
-        </div>
-        <div className="employees-list">
-          {employees.map((data, index) => (
-            <div className={`employee-data ${index % 2 === 0 && "even"}`} key={index}>
-              <label>{fullName(data.email)}</label>
-              <Link to="/work-schedule" className="schedule-button" state={{ uid: data.uid, name: fullName(data.email) }}>
-                Työajat
-              </Link>
-            </div>
-          ))}
-        </div>
+    <div className="employees-content">
+      <div className="employees-title">
+        <label>Työntekijät</label>
+      </div>
+      <div className="employees-list">
+        {employees.map((data, index) => (
+          <div className={`employee-data ${index % 2 === 0 && "even"}`} key={index}>
+            <label>{fullName(data.email)}</label>
+            <Link to="/work-schedule" className="schedule-button" state={{ uid: data.uid, name: fullName(data.email) }}>
+              Työajat
+            </Link>
+          </div>
+        ))}
       </div>
     </div>
   );

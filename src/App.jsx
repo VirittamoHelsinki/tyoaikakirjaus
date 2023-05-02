@@ -2,10 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import Header from "./components/Header";
-import FrontPage from "./pages/FrontPage";
+import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
-import WorkHourPage from "./pages/WorkHourPage";
-import EmployeesPage from "./pages/EmployeesPage";
 import WorkSchedulePage from "./pages/WorkSchedulePage";
 import UserRoute from "./routes/UserRoute";
 import GuestRoute from "./routes/GuestRoute";
@@ -21,7 +19,7 @@ const App = () => {
             path="/"
             element={
               <UserRoute>
-                <FrontPage />
+                <MainPage />
               </UserRoute>
             }
           />
@@ -31,22 +29,6 @@ const App = () => {
               <GuestRoute>
                 <LoginPage />
               </GuestRoute>
-            }
-          />
-          <Route
-            path="work-hour"
-            element={
-              <UserRoute>
-                <WorkHourPage />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="employees"
-            element={
-              <AdminRoute>
-                <EmployeesPage />
-              </AdminRoute>
             }
           />
           <Route

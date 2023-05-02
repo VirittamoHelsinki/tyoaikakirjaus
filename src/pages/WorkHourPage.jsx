@@ -18,7 +18,11 @@ const WorkHourPage = () => {
 
   const navigate = useNavigate();
 
-  const { user } = UserAuth();
+  const { user, logout } = UserAuth();
+
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth();
+  const date = new Date().getDate();
 
   useEffect(() => {
     const interval = setInterval(() => setTime(getHHMMSS()), 1000);
@@ -68,100 +72,116 @@ const WorkHourPage = () => {
 
   useEffect(() => {
     if (!user.uid) {
-      navigate("/");
       return;
-    };
+    }
     fetchWorkTime();
-  }, []);
+  }, [user]);
+
+  const onLogout = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      window.alert("Ongelmia uloskirjautumisessa:\n\n" + error);
+    }
+  };
+
+  const arrivalAllowed = () => {
+    return (
+      new Date().valueOf() > new Date(year, month, date, "7", "20").valueOf() &&
+      new Date().valueOf() < new Date(year, month, date, "9", "10").valueOf() &&
+      !arrival
+    );
+  };
+
+  const departureAllowed = () => {
+    return (
+      new Date().valueOf() > new Date(year, month, date, "15", "49").valueOf() &&
+      new Date().valueOf() < new Date(year, month, date, "17", "19").valueOf() &&
+      !departure
+    );
+  };
 
   return (
-    <div className="workhour-main">
-      <div className="workhour-content">
-        <div className="date-buttons-content">
-          <div className="date-column">
-            <div className="date-label">
-              <label>{new Date().toLocaleDateString("fi-FI", { weekday: "long", year: "numeric", month: "numeric", day: "numeric" })}</label>
-            </div>
-            <div className="time-label">
-              <label>{time}</label>
-            </div>
+    <div className="workhour-content">
+      <div className="date-buttons-content">
+        <div className="date-column">
+          <div className="date-label">
+            <label>{new Date().toLocaleDateString("fi-FI", { weekday: "long", year: "numeric", month: "numeric", day: "numeric" })}</label>
           </div>
-          <div className="button-column">
-            {arrival ? (
-              <div className="time-button disabled">Sisään</div>
-            ) : (
-              <div
-                className="time-button"
-                onClick={() => {
-                  setModalText("Olet kirjautunut sisään!");
-                  setModalTime(new Date());
-                  setArrival(new Date().valueOf().toString());
-                  setShowModal(true);
-                }}
-              >
-                Sisään
-              </div>
-            )}
-            {departure ? (
-              <div className="time-button disabled">Ulos</div>
-            ) : (
-              <div
-                className="time-button"
-                onClick={() => {
-                  setModalText("Olet kirjautunut ulos!");
-                  setModalTime(new Date());
-                  setDeparture(new Date().valueOf().toString());
-                  setShowModal(true);
-                }}
-              >
-                Ulos
-              </div>
-            )}
+          <div className="time-label">
+            <label>{time}</label>
           </div>
         </div>
-        <div className="right-side-main">
-          <div className="times-content">
-            <div className="previous-content">
-              <div className="previous-label">
-                <p>Aiemmat työaikakirjaukset</p>
-              </div>
-              <div className="previous-data">
-                <div className="data-row title" key="title">
-                  <div className="day-date-label">
-                    <label>PÄIVÄMÄÄRÄ</label>
-                  </div>
-                  <label>SISÄÄN</label>
-                  <label>ULOS</label>
-                </div>
-                {workTimes.slice(-6).map((data, index) => (
-                  <div className={`data-row ${index % 2 === 1 && "odd"}`} key={index}>
-                    <div className="day-date-label">
-                      <label>{weekdays[new Date(parseInt(data.arrival)).getDay()]}</label>
-                      <label>
-                        {new Date(parseInt(data.arrival)).getDate()}.{new Date(parseInt(data.arrival)).getMonth() + 1}
-                      </label>
-                    </div>
-                    <label>{getHHMM(new Date(parseInt(data.arrival)))}</label>
-                    {data.departure ? <label>{getHHMM(new Date(parseInt(data.departure)))}</label> : <label className="empty-label" />}
-                  </div>
-                ))}
-              </div>
+        <div className="button-column">
+          {arrivalAllowed() ? (
+            <div
+              className="time-button"
+              onClick={() => {
+                setModalText("Olet kirjautunut sisään!");
+                setModalTime(new Date());
+                setArrival(new Date().valueOf().toString());
+                setShowModal(true);
+              }}
+            >
+              Sisään
             </div>
-            <div className="working-time-content">
-              <div className="label-stamp-box-content">
-                <label className="title-label">Sisään:</label>
-                <label className="stamp-box-label">{arrival && getHHMMSS(new Date(parseInt(arrival)))}</label>
+          ) : (
+            <div className="time-button disabled">Sisään</div>
+          )}
+          {departureAllowed() ? (
+            <div
+              className="time-button"
+              onClick={() => {
+                setModalText("Olet kirjautunut ulos!");
+                setModalTime(new Date());
+                setDeparture(new Date().valueOf().toString());
+                setShowModal(true);
+              }}
+            >
+              Ulos
+            </div>
+          ) : (
+            <div className="time-button disabled">Ulos</div>
+          )}
+        </div>
+      </div>
+      <div className="right-side-main">
+        <div className="times-content">
+          <div className="previous-content">
+            <div className="previous-label">
+              <p>Aiemmat työaikakirjaukset</p>
+            </div>
+            <div className="previous-data">
+              <div className="data-row title" key="title">
+                <div className="day-date-label">
+                  <label>PÄIVÄMÄÄRÄ</label>
+                </div>
+                <label>SISÄÄN</label>
+                <label>ULOS</label>
               </div>
-              <div className="label-stamp-box-content">
-                <label className="title-label">Ulos:</label>
-                <label className="stamp-box-label">{departure && getHHMMSS(new Date(parseInt(departure)))}</label>
-              </div>
+              {workTimes.slice(-6).map((data, index) => (
+                <div className={`data-row ${index % 2 === 1 && "odd"}`} key={index}>
+                  <div className="day-date-label">
+                    <label>{weekdays[new Date(parseInt(data.arrival)).getDay()]}</label>
+                    <label>
+                      {new Date(parseInt(data.arrival)).getDate()}.{new Date(parseInt(data.arrival)).getMonth() + 1}
+                    </label>
+                  </div>
+                  <label>{getHHMM(new Date(parseInt(data.arrival)))}</label>
+                  {data.departure ? <label>{getHHMM(new Date(parseInt(data.departure)))}</label> : <label className="empty-label" />}
+                </div>
+              ))}
             </div>
           </div>
-          <div className="homepage-button-content">
-            <Link to="/" className="homepage-button">
-              Palaa etusivulle
-            </Link>
+          <div className="working-time-content">
+            <div className="label-stamp-box-content">
+              <label className="title-label">Sisään:</label>
+              <label className="stamp-box-label">{arrival && getHHMMSS(new Date(parseInt(arrival)))}</label>
+            </div>
+            <div className="label-stamp-box-content">
+              <label className="title-label">Ulos:</label>
+              <label className="stamp-box-label">{departure && getHHMMSS(new Date(parseInt(departure)))}</label>
+            </div>
           </div>
         </div>
       </div>
