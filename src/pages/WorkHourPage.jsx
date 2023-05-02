@@ -85,7 +85,7 @@ const WorkHourPage = () => {
 
   const departureAllowed = () => {
     return (
-      new Date().valueOf() > new Date(year, month, date, "15", "49").valueOf() &&
+      new Date().valueOf() > new Date(year, month, date, "15", "29").valueOf() &&
       new Date().valueOf() < new Date(year, month, date, "17", "19").valueOf() &&
       !departure
     );
