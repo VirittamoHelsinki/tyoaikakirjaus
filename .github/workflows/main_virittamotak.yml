@@ -26,13 +26,10 @@ jobs:
         username: ${{ secrets.AzureAppService_ContainerUsername_4719fffcf65b41a49b014156e5d7d7ef }}
         password: ${{ secrets.AzureAppService_ContainerPassword_7b3a2ed2afc142ad86620ba545c4871b }}
 
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: virittamo.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4719fffcf65b41a49b014156e5d7d7ef }}/tyoaikakirjaus:${{ github.sha }}
-        file: ./Dockerfile
-
+    - run: |
+        docker build . -t virittamo.azurecr.io/tyoaikakirjaus:${{ github.sha }}
+        docker push virittamo.azurecr.io/tyoaikakirjaus:${{ github.sha }}
+   
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -48,4 +45,4 @@ jobs:
         app-name: 'virittamotak'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_9f4b3a12926041e78fbb8a3857de189e }}
-        images: 'virittamo.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4719fffcf65b41a49b014156e5d7d7ef }}/tyoaikakirjaus:${{ github.sha }}'
+        images: 'virittamo.azurecr.io/tyoaikakirjaus:${{ github.sha }}'
