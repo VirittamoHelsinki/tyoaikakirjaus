@@ -34,6 +34,13 @@ const WorkHourPage = () => {
         arrival: arrival,
         departure: departure,
       });
+      await setDoc(
+        doc(db, "logs", new Date().toJSON().slice(0, 10)),
+        {
+          [new Date().toLocaleTimeString("en-GB")]: user.uid + " clicked set work time button ",
+        },
+        { merge: true }
+      );
     } catch (error) {
       window.alert("Ongelmia tallennuksessa:\n\n" + error);
     }

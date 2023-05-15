@@ -21,6 +21,13 @@ export const AuthContextProvider = ({ children }) => {
       }
       signOut(auth);
       await sendEmailVerification(userdata.user);
+      await setDoc(
+        doc(db, "logs", new Date().toJSON().slice(0, 10)),
+        {
+          [new Date().toLocaleTimeString("en-GB")]: userdata.user.uid + " created user",
+        },
+        { merge: true }
+      );
       setMessage("Vahvistuspyyntö lähetetty antamaasi sähköpostiosoitteeseen.");
       setShowMessage(true);
     } catch (error) {
@@ -37,13 +44,29 @@ export const AuthContextProvider = ({ children }) => {
         setMessage("Ole hyvä ja käy vahvistamassa rekisteröityminen antamassasi sähköpostiosoitteessa");
         setShowMessage(true);
       }
+      await setDoc(
+        doc(db, "logs", new Date().toJSON().slice(0, 10)),
+        {
+          [new Date().toLocaleTimeString("en-GB")]: userdata.user.uid + " signed in",
+        },
+        { merge: true }
+      );
     } catch (error) {
       setMessage("Kirjautuminen ei onnistunut antamallasi sähköpostilla ja salasanalla: " + error);
       setShowMessage(true);
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (user) {
+      await setDoc(
+        doc(db, "logs", new Date().toJSON().slice(0, 10)),
+        {
+          [new Date().toLocaleTimeString("en-GB")]: user.uid + " signed out",
+        },
+        { merge: true }
+      );
+    }
     setAdmin(false);
     return signOut(auth);
   };
