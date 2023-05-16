@@ -113,10 +113,12 @@ const WorkHourPage = () => {
             <div
               className="time-button"
               onClick={() => {
-                setModalText("Olet kirjautunut sisään!");
-                setModalTime(new Date());
-                setArrival(new Date().valueOf().toString());
-                setShowModal(true);
+                if (user) {
+                  setModalText("Olet kirjautunut sisään!");
+                  setModalTime(new Date());
+                  setArrival(new Date().valueOf().toString());
+                  setShowModal(true);
+                }
               }}
             >
               Sisään
@@ -128,10 +130,12 @@ const WorkHourPage = () => {
             <div
               className="time-button"
               onClick={() => {
-                setModalText("Olet kirjautunut ulos!");
-                setModalTime(new Date());
-                setDeparture(new Date().valueOf().toString());
-                setShowModal(true);
+                if (user) {
+                  setModalText("Olet kirjautunut ulos!");
+                  setModalTime(new Date());
+                  setDeparture(new Date().valueOf().toString());
+                  setShowModal(true);
+                }
               }}
             >
               Ulos
