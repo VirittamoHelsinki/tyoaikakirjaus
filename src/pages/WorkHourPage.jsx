@@ -89,12 +89,9 @@ const WorkHourPage = () => {
     );
   };
 
+  // 8:04 = 29040000, 8:14 = 296400000
   const departureAllowed = () => {
-    return (
-      new Date().valueOf() > new Date(year, month, date, "15", "29").valueOf() &&
-      new Date().valueOf() < new Date(year, month, date, "17", "19").valueOf() &&
-      !departure
-    );
+    return new Date().valueOf() > parseInt(arrival) + 29040000 && new Date().valueOf() < parseInt(arrival) + 29640000 && !departure;
   };
 
   return (
