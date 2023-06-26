@@ -69,8 +69,8 @@ const WorkSchedulePage = () => {
   };
 
   const timeTag = (date, stamp) => {
-    if (date.day === 0 || date.day === 6) return;
-    if (new Date(date.year, date.month, date.date).valueOf() > new Date().valueOf()) return;
+    let yesterday = new Date().setDate(new Date(date.year, date.month, date.date).getDate() - 1);
+    if (date.day === 0 || date.day === 6 || yesterday.valueOf() > new Date().valueOf()) return;
     return stamp ? <label className="time-label">{getHHMM(new Date(parseInt(stamp)))}</label> : <label className="time-label">Leimaus puuttuu</label>;
   };
 
