@@ -4,13 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyATY18bSkf_so8MAeM4mFBje_UNGP9PyTU",
-  authDomain: "virittamo-tyoaikakirjaus.firebaseapp.com",
-  projectId: "virittamo-tyoaikakirjaus",
-  storageBucket: "virittamo-tyoaikakirjaus.appspot.com",
-  messagingSenderId: "595897029838",
-  appId: "1:595897029838:web:e743787a84a57a9878ec9f",
-  measurementId: "G-J80ZY379HE",
+  apiKey: "AIzaSyAcvacIAZlsFg0j_S38tD_8WcP6GJh1IV8",
+  authDomain: "tyoaikakirjaus-a0a15.firebaseapp.com",
+  projectId: "tyoaikakirjaus-a0a15",
+  storageBucket: "tyoaikakirjaus-a0a15.appspot.com",
+  messagingSenderId: "798135307060",
+  appId: "1:798135307060:web:482c4472f6d5ce96503361",
 };
 
 export const app = initializeApp(firebaseConfig);

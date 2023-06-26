@@ -68,6 +68,12 @@ const WorkSchedulePage = () => {
     }
   };
 
+  const timeTag = (date, stamp) => {
+    if (date.day === 0 || date.day === 6) return;
+    if (new Date(date.year, date.month, date.date).valueOf() > new Date().valueOf()) return;
+    return stamp ? <label className="time-label">{getHHMM(new Date(parseInt(stamp)))}</label> : <label className="time-label">Leimaus puuttuu</label>;
+  };
+
   return (
     <div className="schedule-main">
       <div className="schedule-content">
@@ -104,8 +110,8 @@ const WorkSchedulePage = () => {
                     {day.date}.{parseInt(day.month) + 1 < 10 ? "0" + (parseInt(day.month) + 1) : parseInt(day.month) + 1}.{day.year}
                   </label>
                 </div>
-                {day.arrival && <label className="time-label">{getHHMM(new Date(parseInt(day.arrival)))}</label>}
-                {day.departure && <label className="time-label">{getHHMM(new Date(parseInt(day.departure)))}</label>}
+                {timeTag(day, day.arrival)}
+                {timeTag(day, day.departure)}
               </div>
             ))}
           </div>
