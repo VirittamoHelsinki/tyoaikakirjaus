@@ -10,6 +10,7 @@ const LoginPage = () => {
 
   const { createUser, signIn, showMessage, message, closeMessage } = UserAuth();
 
+  /* If a valid user, call the create user through the provider */
   const onSignup = (e) => {
     e.preventDefault();
     if ((email.includes("@hel.fi") || email.includes("@edu.hel.fi")) && password.length >= 8 && password === confirmPassword) {
@@ -20,6 +21,7 @@ const LoginPage = () => {
     }
   };
 
+  /* Call the sign in through the provider */
   const onSignin = (e) => {
     e.preventDefault();
     signIn(email, password);

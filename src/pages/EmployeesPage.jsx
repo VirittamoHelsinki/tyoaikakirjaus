@@ -8,6 +8,7 @@ import "../styles/EmployeesPage.scss";
 const EmployeesPage = () => {
   const [employees, setEmployees] = useState([]);
 
+  /* Fetch the list of employees from db */
   const fetchEmployees = async () => {
     try {
       const list = [];
@@ -24,6 +25,7 @@ const EmployeesPage = () => {
     }
   };
 
+  /* Call the fetchEmployees function when page loads */
   useEffect(() => {
     fetchEmployees();
   }, []);

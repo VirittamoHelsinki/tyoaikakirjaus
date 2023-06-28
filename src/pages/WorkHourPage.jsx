@@ -21,6 +21,7 @@ const WorkHourPage = () => {
   const month = new Date().getMonth();
   const date = new Date().getDate();
 
+  /* Update the clock time every second */
   useEffect(() => {
     const interval = setInterval(() => setTime(getHHMMSS()), 1000);
     return () => {
@@ -28,6 +29,7 @@ const WorkHourPage = () => {
     };
   }, []);
 
+  /* Save the arrival/departure unix stamp to db by using "yyyy-mm-dd" doc name, save log info to db */
   const setWorkTime = async () => {
     try {
       await setDoc(doc(db, "users", user.uid, "working-time", getDate(new Date())), {
@@ -46,6 +48,7 @@ const WorkHourPage = () => {
     }
   };
 
+  /* Fetch today stamps and set them in arrival/departure states if exists, fetch all docs from the working-time collection */
   const fetchWorkTime = async () => {
     try {
       const docSnap = await getDoc(doc(db, "users", user.uid, "working-time", getDate(new Date())));
@@ -67,6 +70,7 @@ const WorkHourPage = () => {
     }
   };
 
+  /* When arrival/departure changes call the setworkTime function */
   useEffect(() => {
     if (!arrival && !departure) {
       return;
@@ -74,6 +78,7 @@ const WorkHourPage = () => {
     setWorkTime();
   }, [arrival, departure]);
 
+  /* Do the db fetching when user data is ready */
   useEffect(() => {
     if (!user.uid) {
       return;
@@ -81,6 +86,7 @@ const WorkHourPage = () => {
     fetchWorkTime();
   }, [user]);
 
+  /* Arrival allowed between 7:20-9:10 */
   const arrivalAllowed = () => {
     return (
       new Date().valueOf() > new Date(year, month, date, "7", "20").valueOf() &&
@@ -89,7 +95,7 @@ const WorkHourPage = () => {
     );
   };
 
-  // 8:04 = 29040000, 8:14 = 296400000
+  /* Departure allowed after 8:04 = 29040000, 8:14 = 296400000 */
   const departureAllowed = () => {
     return new Date().valueOf() > parseInt(arrival) + 29040000 && new Date().valueOf() < parseInt(arrival) + 29640000 && !departure;
   };

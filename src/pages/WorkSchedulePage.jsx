@@ -15,6 +15,7 @@ const WorkSchedulePage = () => {
 
   const location = useLocation();
 
+  /* Fetch the work schedule data by setting the day of the selected month to 1 and use while loop until the month changes */
   const fetchMonthData = async () => {
     try {
       setLoading(true);
@@ -23,11 +24,13 @@ const WorkSchedulePage = () => {
       while (date.getMonth() === currentMonth) {
         let arrival = null;
         let departure = null;
+        /* Do the db query by using "yyyy-mm-dd" doc name, replace arrival/departure data if doc exists */
         const docSnap = await getDoc(doc(db, "users", location.state.uid, "working-time", getDate(date)));
         if (docSnap.exists()) {
           arrival = docSnap.data().arrival;
           departure = docSnap.data().departure;
         }
+        /* Push the date object with stamp data to list and set the date 1 up */
         _days.push({
           day: date.getDay(),
           date: date.getDate() < 10 ? "0" + date.getDate() : date.getDate(),
@@ -46,10 +49,12 @@ const WorkSchedulePage = () => {
     }
   };
 
+  /* Do the fetching when the month changes */
   useEffect(() => {
     fetchMonthData();
   }, [currentMonth]);
 
+  /* Decrease month number */
   const prevMonth = () => {
     if (currentMonth > 0) {
       setCurrentMonth(currentMonth - 1);
@@ -59,6 +64,7 @@ const WorkSchedulePage = () => {
     }
   };
 
+  /* Increase month number */
   const nextMonth = () => {
     if (currentMonth < 11) {
       setCurrentMonth(currentMonth + 1);
@@ -68,6 +74,7 @@ const WorkSchedulePage = () => {
     }
   };
 
+  /* Return in/out stamp if stamp exists, return empty if weekend or date is bigger than yesterday date, return "missing stamp" in all other cases  */
   const timeTag = (date, stamp) => {
     if (stamp) {
       return <label className="time-label">{getHHMM(new Date(parseInt(stamp)))}</label>;
