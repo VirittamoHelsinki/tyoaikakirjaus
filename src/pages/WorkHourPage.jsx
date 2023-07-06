@@ -95,7 +95,7 @@ const WorkHourPage = () => {
     );
   };
 
-  /* Departure allowed after 8:04 = 29040000, 8:14 = 296400000 */
+  /* Departure allowed after 8h04min = 29040000, 8h14min = 296400000 */
   const departureAllowed = () => {
     return new Date().valueOf() > parseInt(arrival) + 29040000 && new Date().valueOf() < parseInt(arrival) + 29640000 && !departure;
   };
