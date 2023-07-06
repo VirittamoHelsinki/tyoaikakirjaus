@@ -16,6 +16,9 @@ Employee's work hour data is displayed one month at a time on the work schedule 
 
 Firebase services are protected with the App Check -feature, meaning it only allows database calls from the certain server.
 
+# Authentication
+The application is intended for use by Virittämö Helsinki only and the user must log in with the Virittämö Helsinki's email address. The register/sign-in system is made using Google Authentication service.
+
 # How to run the project
 
 1. Clone the project from https://github.com/VirittamoHelsinki/tyoaikakirjaus.git
