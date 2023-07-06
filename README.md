@@ -6,7 +6,13 @@ The application has two views, one for employees and one for supervisors. In the
 
 <img src="public/työaikakirjaus_employees.png" alt="drawing" width="66%"/>
 
-The supervisor view shows the list of employees. The supervisor can open employee's work hour data by pressing the button next to the employee's name. Employee's work hour data is displayed one month at a time on the work schedule page.
+The supervisor view shows the list of employees. The supervisor can open employee's work hour data by pressing the button next to the employee's name.
+
+<img src="public/työaikakirjaus_admin1.png" alt="drawing" width="66%"/>
+
+Employee's work hour data is displayed one month at a time on the work schedule page.
+
+<img src="public/työaikakirjaus_admin2.png" alt="drawing" width="66%"/>
 
 Firebase services are protected with the App Check -feature, meaning it only allows database calls from the certain server.
 
